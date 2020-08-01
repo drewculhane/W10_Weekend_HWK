@@ -1,0 +1,453 @@
+Andrews-MBP:w10_weekend andrewculhane$ ls
+homework
+Andrews-MBP:w10_weekend andrewculhane$ cd homework
+Andrews-MBP:homework andrewculhane$ ls
+matrix_app_api
+Andrews-MBP:homework andrewculhane$ cd matrix_app_api/
+Andrews-MBP:matrix_app_api andrewculhane$ ls
+Gemfile         README.md       app             config          db              log             storage         tmp
+Gemfile.lock    Rakefile        bin             config.ru       lib             public          test            vendor
+Andrews-MBP:matrix_app_api andrewculhane$ bundle install
+The dependency tzinfo-data (>= 0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mingw32, x86-mswin32, x64-mingw32, java. To add those platforms to the bundle, run `bundle lock --add-platform x86-mingw32 x86-mswin32 x64-mingw32 java`.
+Fetching gem metadata from https://rubygems.org/............
+Fetching gem metadata from https://rubygems.org/.
+Resolving dependencies...
+Using rake 13.0.1
+Using concurrent-ruby 1.1.6
+Using i18n 1.8.5
+Using minitest 5.14.1
+Using thread_safe 0.3.6
+Using tzinfo 1.2.7
+Using zeitwerk 2.4.0
+Using activesupport 6.0.3.2
+Using builder 3.2.4
+Using erubi 1.9.0
+Using mini_portile2 2.4.0
+Using nokogiri 1.10.10
+Using rails-dom-testing 2.0.3
+Using crass 1.0.6
+Using loofah 2.6.0
+Using rails-html-sanitizer 1.3.0
+Using actionview 6.0.3.2
+Using rack 2.2.3
+Using rack-test 1.1.0
+Using actionpack 6.0.3.2
+Using nio4r 2.5.2
+Using websocket-extensions 0.1.5
+Using websocket-driver 0.7.3
+Using actioncable 6.0.3.2
+Using globalid 0.4.2
+Using activejob 6.0.3.2
+Using activemodel 6.0.3.2
+Using activerecord 6.0.3.2
+Using mimemagic 0.3.5
+Using marcel 0.3.3
+Using activestorage 6.0.3.2
+Using mini_mime 1.0.2
+Using mail 2.7.1
+Using actionmailbox 6.0.3.2
+Using actionmailer 6.0.3.2
+Using actiontext 6.0.3.2
+Using msgpack 1.3.3
+Using bootsnap 1.4.7
+Using bundler 2.1.4
+Using byebug 11.1.3
+Using ffi 1.13.1
+Using hirb 0.7.3
+Using rb-fsevent 0.10.4
+Using rb-inotify 0.10.1
+Using listen 3.2.1
+Using method_source 1.0.0
+Using pg 1.2.3
+Using puma 4.3.5
+Using thor 1.0.1
+Using railties 6.0.3.2
+Using sprockets 4.0.2
+Using sprockets-rails 3.2.1
+Using rails 6.0.3.2
+Using spring 2.1.0
+Using spring-watcher-listen 2.0.1
+Bundle complete! 10 Gemfile dependencies, 55 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+Andrews-MBP:matrix_app_api andrewculhane$ rails s 
+=> Booting Puma
+=> Rails 6.0.3.2 application starting in development 
+=> Run `rails server --help` for more startup options
+Puma starting in single mode...
+* Version 4.3.5 (ruby 2.7.1-p83), codename: Mysterious Traveller
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://127.0.0.1:3000
+* Listening on tcp://[::1]:3000
+Use Ctrl-C to stop
+^C- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2020-08-01 10:37:34 -0400 ===
+- Goodbye!
+Exiting
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:create
+Created database 'matrix_app_api_development'
+Created database 'matrix_app_api_test'
+Andrews-MBP:matrix_app_api andrewculhane$ rails g migration CreateCharacter
+Running via Spring preloader in process 81748
+      invoke  active_record
+      create    db/migrate/20200801143949_create_character.rb
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate
+== 20200801143949 CreateCharacter: migrating ==================================
+-- create_table(:characters)
+   -> 0.0077s
+== 20200801143949 CreateCharacter: migrated (0.0078s) =========================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails g migration FixDescriptionColumnTypo 
+Running via Spring preloader in process 81824
+      invoke  active_record
+      create    db/migrate/20200801144229_fix_description_column_typo.rb
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate
+== 20200801144229 FixDescriptionColumnTypo: migrating =========================
+-- rename_column(:characters, :description, :char_description)
+   -> 0.0049s
+== 20200801144229 FixDescriptionColumnTypo: migrated (0.0050s) ================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails dbconsole 
+psql (12.3)
+Type "help" for help.
+
+matrix_app_api_development=# SELECT * FROM characters ; 
+ id | name | char_description | img_url 
+----+------+------------------+---------
+(0 rows)
+
+matrix_app_api_development=# \q
+Andrews-MBP:matrix_app_api andrewculhane$ rails g migration ChangeTableName 
+Running via Spring preloader in process 81930
+      invoke  active_record
+      create    db/migrate/20200801144532_change_table_name.rb
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate
+== 20200801144532 ChangeTableName: migrating ==================================
+-- rename_table(:characters, :matrix_characters)
+   -> 0.0118s
+== 20200801144532 ChangeTableName: migrated (0.0119s) =========================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:rollback 
+== 20200801144532 ChangeTableName: reverting ==================================
+-- rename_table(:matrix_characters, :characters)
+   -> 0.0185s
+== 20200801144532 ChangeTableName: reverted (0.0228s) =========================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails destroy migration ChangeTableName 
+Running via Spring preloader in process 82013
+      invoke  active_record
+      remove    db/migrate/20200801144532_change_table_name.rb
+Andrews-MBP:matrix_app_api andrewculhane$ ls
+Gemfile         README.md       app             config          db              log             storage         tmp
+Gemfile.lock    Rakefile        bin             config.ru       lib             public          test            vendor
+Andrews-MBP:matrix_app_api andrewculhane$ cd app 
+Andrews-MBP:app andrewculhane$ ls
+channels        controllers     jobs            mailers         models          views
+Andrews-MBP:app andrewculhane$ cd models
+Andrews-MBP:models andrewculhane$ ls
+application_record.rb   concerns
+Andrews-MBP:models andrewculhane$ touch characters.rb
+Andrews-MBP:models andrewculhane$ rails db:seed
+rails aborted!
+ActiveModel::UnknownAttributeError: unknown attribute 'description' for Character.
+/Users/andrewculhane/Desktop/seir-526/w10_weekend/homework/matrix_app_api/bin/rails:9:in `<top (required)>'
+/Users/andrewculhane/Desktop/seir-526/w10_weekend/homework/matrix_app_api/bin/spring:15:in `<top (required)>'
+bin/rails:3:in `load'
+bin/rails:3:in `<main>'
+Tasks: TOP => db:seed
+(See full trace by running task with --trace)
+Andrews-MBP:models andrewculhane$ rails db:seed
+Andrews-MBP:models andrewculhane$ rails dbconsole
+psql (12.3)
+Type "help" for help.
+
+matrix_app_api_development=# exit
+Andrews-MBP:models andrewculhane$ rails c 
+Running via Spring preloader in process 82184
+Loading development environment (Rails 6.0.3.2)
+irb(main):001:0> exit
+Andrews-MBP:models andrewculhane$ rails dbconsole
+psql (12.3)
+Type "help" for help.
+
+matrix_app_api_development=# SELECT * FROM characters; 
+ id |    name     | char_description | img_url 
+----+-------------+------------------+---------
+  1 | Neo         | f                | 
+  2 | Trinity     | f                | 
+  3 | Morpheus    | f                | 
+  4 | Agent Smith | f                | 
+(4 rows)
+
+matrix_app_api_development=# DROP DATABASE 'matrix_app_api' 
+matrix_app_api_development-# rails dbconsole
+matrix_app_api_development-# SELECT * FROM characters; 
+ERROR:  syntax error at or near "'matrix_app_api'"
+LINE 1: DROP DATABASE 'matrix_app_api' 
+                      ^
+matrix_app_api_development=# DROP DATABASE 
+matrix_app_api_development-# ; 
+ERROR:  syntax error at or near ";"
+LINE 2: ;
+        ^
+matrix_app_api_development=# rake db:drop 
+matrix_app_api_development-# ; 
+ERROR:  syntax error at or near "rake"
+LINE 1: rake db:drop
+        ^
+matrix_app_api_development=# exit
+Andrews-MBP:models andrewculhane$ cd .. 
+Andrews-MBP:app andrewculhane$ cd .. 
+Andrews-MBP:matrix_app_api andrewculhane$ rake db:drop 
+Dropped database 'matrix_app_api_development'
+Dropped database 'matrix_app_api_test'
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:create 
+Created database 'matrix_app_api_development'
+Created database 'matrix_app_api_test'
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate
+== 20200801143949 CreateCharacter: migrating ==================================
+-- create_table(:characters)
+   -> 0.0080s
+== 20200801143949 CreateCharacter: migrated (0.0081s) =========================
+
+== 20200801144229 FixDescriptionColumnTypo: migrating =========================
+-- rename_column(:characters, :description, :char_description)
+   -> 0.0059s
+== 20200801144229 FixDescriptionColumnTypo: migrated (0.0060s) ================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:seed
+Andrews-MBP:matrix_app_api andrewculhane$ rails dbconsole ; 
+Type "help" for help.
+
+matrix_app_api_development=# SELECT * FROM characters; 
+ id |    name     |    char_description     | img_url 
+----+-------------+-------------------------+---------
+  1 | Neo         | Hero, ex-programmer.    | 
+  3 | Morpheus    | Tank, Believer, Leader. | 
+  4 | Agent Smith | Nemesis of Neo.         | 
+(4 rows)
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails c 
+Loading development environment (Rails 6.0.3.2)
+irb(main):001:0> Character.find(1).update(img_url: "https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg") 
+  Character Load (0.5ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+   (0.1ms)  BEGIN
+  Character Update (1.6ms)  UPDATE "characters" SET "img_url" = $1 WHERE "characters"."id" = $2  [["img_url", "https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg"], ["id", 1]]
+   (0.9ms)  COMMIT
+=> true
+irb(main):002:0> Character.all
+  Character Load (0.3ms)  SELECT "characters".* FROM "characters" LIMIT $1  [["LIMIT", 11]]er, Leader.", img_url: nil>, #<Character id: 4, name: "Agent Smith", char_description: "Nemesis of Neo.", img_url: nil>, #<Character id: 1, name: "Neo", char_description: "Hero, ex-programmer.", img_url: "https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/me...">]>
+irb(main):003:0> Hirb.enable
+=> true
+irb(main):004:0> Character.all
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters"
+| id | name        | char_description        | img_url                                                                     |
++----+-------------+-------------------------+-----------------------------------------------------------------------------+
+| 2  | Trinity     | Heroine, femme fatale   |                                                                             |
+| 3  | Morpheus    | Tank, Believer, Leader. |                                                                             |
+| 4  | Agent Smith | Nemesis of Neo.         |                                                                             |
+| 1  | Neo         | Hero, ex-programmer.    | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg |
++----+-------------+-------------------------+-----------------------------------------------------------------------------+
+4 rows in set
+irb(main):005:0> Character.find(2).update(img_url: "https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg")
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+  Character Update (0.4ms)  UPDATE "characters" SET "img_url" = $1 WHERE "characters"."id" = $2  [["img_url", "https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg"], ["id", 2]]
+   (0.5ms)  COMMIT
+=> true
+irb(main):006:0> Character.all
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters"
+| id | name        | char_description        | img_url                                                                          |
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+| 3  | Morpheus    | Tank, Believer, Leader. |                                                                                  |
+| 4  | Agent Smith | Nemesis of Neo.         |                                                                                  |
+| 1  | Neo         | Hero, ex-programmer.    | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg      |
+| 2  | Trinity     | Heroine, femme fatale   | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg |
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+4 rows in set
+irb(main):007:0> Character.find(3).update(img_url: "https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg")
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 3], ["LIMIT", 1]]
+  Character Update (0.4ms)  UPDATE "characters" SET "img_url" = $1 WHERE "characters"."id" = $2  [["img_url", "https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg"], ["id", 3]]
+   (0.5ms)  COMMIT
+=> true
+irb(main):008:0> Character.all
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+| id | name        | char_description        | img_url                                                                          |
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+| 4  | Agent Smith | Nemesis of Neo.         |                                                                                  |
+| 1  | Neo         | Hero, ex-programmer.    | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg      |
+| 2  | Trinity     | Heroine, femme fatale   | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg |
+| 3  | Morpheus    | Tank, Believer, Leader. | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg     |
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+4 rows in set
+irb(main):009:0> Character.find(4).update(img_url: "https://en.wikipedia.org/wiki/Agent_Smith")
+   (0.1ms)  BEGIN
+  Character Update (0.3ms)  UPDATE "characters" SET "img_url" = $1 WHERE "characters"."id" = $2  [["img_url", "https://en.wikipedia.org/wiki/Agent_Smith"], ["id", 4]]
+   (0.3ms)  COMMIT
+=> true
+irb(main):010:0> Character.all 
+  Character Load (0.7ms)  SELECT "characters".* FROM "characters"
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+| id | name        | char_description        | img_url                                                                          |
+| 1  | Neo         | Hero, ex-programmer.    | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg      |
+| 2  | Trinity     | Heroine, femme fatale   | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg |
+| 3  | Morpheus    | Tank, Believer, Leader. | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg     |
+| 4  | Agent Smith | Nemesis of Neo.         | https://en.wikipedia.org/wiki/Agent_Smith                                        |
++----+-------------+-------------------------+----------------------------------------------------------------------------------+
+4 rows in set
+irb(main):011:0> Character.find(4).delete 
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 4], ["LIMIT", 1]]
+  Character Destroy (0.6ms)  DELETE FROM "characters" WHERE "characters"."id" = $1  [["id", 4]]
++----+-------------+------------------+-------------------------------------------+
+| 4  | Agent Smith | Nemesis of Neo.  | https://en.wikipedia.org/wiki/Agent_Smith |
++----+-------------+------------------+-------------------------------------------+
+1 row in set
+irb(main):012:0> Character.all
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters"
++----+----------+-------------------------+----------------------------------------------------------------------------------+
+| id | name     | char_description        | img_url                                                                          |
++----+----------+-------------------------+----------------------------------------------------------------------------------+
+| 1  | Neo      | Hero, ex-programmer.    | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg      |
+| 3  | Morpheus | Tank, Believer, Leader. | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg     |
++----+----------+-------------------------+----------------------------------------------------------------------------------+
+3 rows in set
+irb(main):013:0> Character.create(name: "The Oracle", char_description: "The all-seing cybonic eye", img_url: "https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i
+.gif")
+   (0.2ms)  BEGIN
+  Character Create (0.5ms)  INSERT INTO "characters" ("name", "char_description", "img_url") VALUES ($1, $2, $3) RETURNING "id"  [["name", "The Oracle"], ["char_description", "The all-seing cybonic eye"], ["img_url", "https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif"]]
+   (0.6ms)  COMMIT
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| 5  | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+1 row in set
+irb(main):014:0> Character.all
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| id | name       | char_description          | img_url                                                                              |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| 1  | Neo        | Hero, ex-programmer.      | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg          |
+| 2  | Trinity    | Heroine, femme fatale     | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg     |
+| 3  | Morpheus   | Tank, Believer, Leader.   | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg         |
+| 5  | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+4 rows in set
+irb(main):015:0> Character.find(5).update(id: "4")
+   (0.1ms)  BEGIN
+  Character Update (0.3ms)  UPDATE "characters" SET "id" = $1 WHERE "characters"."id" = $2  [["id", 4], ["id", 5]]
+   (0.5ms)  COMMIT
+=> true
+irb(main):016:0> Character.all
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| id | name       | char_description          | img_url                                                                              |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| 1  | Neo        | Hero, ex-programmer.      | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg          |
+| 2  | Trinity    | Heroine, femme fatale     | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg     |
+| 3  | Morpheus   | Tank, Believer, Leader.   | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg         |
+| 4  | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+4 rows in set
+irb(main):017:0> Character.find(4).update(id: "5") 
+   (0.1ms)  BEGIN
+  Character Update (0.4ms)  UPDATE "characters" SET "id" = $1 WHERE "characters"."id" = $2  [["id", 5], ["id", 4]]
+   (0.3ms)  COMMIT
+=> true
+irb(main):018:0> Character.all
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters"
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| id | name       | char_description          | img_url                                                                              |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+| 1  | Neo        | Hero, ex-programmer.      | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg          |
+| 2  | Trinity    | Heroine, femme fatale     | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg     |
+| 3  | Morpheus   | Tank, Believer, Leader.   | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg         |
+| 5  | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+
+4 rows in set
+irb(main):019:0> exit
+Andrews-MBP:matrix_app_api andrewculhane$ ls
+Gemfile         README.md       app             config          db              log             storage         tmp
+Gemfile.lock    Rakefile        bin             config.ru       lib             public          test            vendor
+Andrews-MBP:matrix_app_api andrewculhane$ rails g migration CreateVehicles 
+Running via Spring preloader in process 82917
+      invoke  active_record
+      create    db/migrate/20200801152029_create_vehicles.rb
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate 
+== 20200801152029 CreateVehicles: migrating ===================================
+-- create_table(:vehicles)
+   -> 0.0086s
+== 20200801152029 CreateVehicles: migrated (0.0086s) ==========================
+
+Andrews-MBP:matrix_app_api andrewculhane$ ls
+Gemfile         README.md       app             config          db              log             storage         tmp
+Gemfile.lock    Rakefile        bin             config.ru       lib             public          test            vendor
+Andrews-MBP:matrix_app_api andrewculhane$ cd app
+Andrews-MBP:app andrewculhane$ cd models
+Andrews-MBP:models andrewculhane$ ls
+application_record.rb   character.rb            concerns
+Andrews-MBP:models andrewculhane$ touch vehicle.rb
+Andrews-MBP:models andrewculhane$ open vehicle.rb
+Andrews-MBP:app andrewculhane$ cd .. 
+Andrews-MBP:matrix_app_api andrewculhane$ rails g migration AddColumnToCharacters 
+Running via Spring preloader in process 83034
+      invoke  active_record
+      create    db/migrate/20200801152429_add_column_to_characters.rb
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:migrate
+== 20200801152429 AddColumnToCharacters: migrating ============================
+-- add_column(:characters, :vehicle_id, :integer)
+   -> 0.0027s
+== 20200801152429 AddColumnToCharacters: migrated (0.0027s) ===================
+
+Andrews-MBP:matrix_app_api andrewculhane$ rails db:seed
+Andrews-MBP:matrix_app_api andrewculhane$ rails c 
+Running via Spring preloader in process 83178
+Loading development environment (Rails 6.0.3.2)
+irb(main):001:0> exit 
+Andrews-MBP:matrix_app_api andrewculhane$ rails dbconsole
+psql (12.3)
+Type "help" for help.
+
+matrix_app_api_development=# SELECT * FROM vehicles ; 
+ id |      name      |   style   
+----+----------------+-----------
+(1 row)
+
+matrix_app_api_development=# SELECT * FROM characters ; 
+ id |    name    |     char_description      |                                       img_url                                        | vehicle_id 
+  1 | Neo        | Hero, ex-programmer.      | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg          |           
+  2 | Trinity    | Heroine, femme fatale     | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg     |           
+  3 | Morpheus   | Tank, Believer, Leader.   | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg         |           
+  5 | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |           
+(4 rows)
+matrix_app_api_development=# exit 
+Andrews-MBP:matrix_app_api andrewculhane$ rails c 
+Running via Spring preloader in process 83278
+Loading development environment (Rails 6.0.3.2)
+irb(main):001:0> Character.find(1,2).update(vehicle_id: 1)
+Traceback (most recent call last):
+        1: from (irb):1
+NoMethodError (undefined method `update' for #<Array:0x00007f979cb6f9a0>)
+irb(main):002:0> Character.find(1).update(vehicle_id: 1)
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 1], ["LIMIT", 1]]
+  Character Update (0.4ms)  UPDATE "characters" SET "vehicle_id" = $1 WHERE "characters"."id" = $2  [["vehicle_id", 1], ["id", 1]]
+=> true
+irb(main):003:0> Character.find(2).update(vehicle_id: 1)
+  Character Load (0.4ms)  SELECT "characters".* FROM "characters" WHERE "characters"."id" = $1 LIMIT $2  [["id", 2], ["LIMIT", 1]]
+   (0.1ms)  BEGIN
+  Character Update (0.3ms)  UPDATE "characters" SET "vehicle_id" = $1 WHERE "characters"."id" = $2  [["vehicle_id", 1], ["id", 2]]
+   (0.5ms)  COMMIT
+=> true
+irb(main):004:0> Character.all
+  Character Load (0.2ms)  SELECT "characters".* FROM "characters" LIMIT $1  [["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Character id: 3, name: "Morpheus", char_description: "Tank, Believer, Leader.", img_url: "https://en.wikipedia.org/wiki/Morpheus_(The_Matrix...", vehicle_id: nil>, #<Character id: 5, name: "The Oracle", char_description: "The all-seing cybonic eye", img_url: "https://en.wikipedia.org/wiki/The_Oracle_(The_Matr...", vehicle_id: nil>, #<Character id: 1, name: "Neo", char_description: "Hero, ex-programmer.", img_url: "https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/me...", vehicle_id: 1>, #<Character id: 2, name: "Trinity", char_description: "Heroine, femme fatale", img_url: "https://en.wikipedia.org/wiki/Trinity_(The_Matrix)...", vehicle_id: 1>]>
+irb(main):005:0> Hirb.enable
+=> true
+irb(main):006:0> Character.all
+  Character Load (0.5ms)  SELECT "characters".* FROM "characters"
++----+------------+---------------------------+--------------------------------------------------------------------------------------+------------+
+| id | name       | char_description          | img_url                                                                              | vehicle_id |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+------------+
+| 3  | Morpheus   | Tank, Believer, Leader.   | https://en.wikipedia.org/wiki/Morpheus_(The_Matrix)#/media/File:Morpheus.jpg         |            |
+| 5  | The Oracle | The all-seing cybonic eye | https://en.wikipedia.org/wiki/The_Oracle_(The_Matrix)#/media/File:The_Oracle_(i).gif |            |
+| 1  | Neo        | Hero, ex-programmer.      | https://en.wikipedia.org/wiki/Neo_(The_Matrix)#/media/File:NeoTheMatrix.jpg          | 1          |
+| 2  | Trinity    | Heroine, femme fatale     | https://en.wikipedia.org/wiki/Trinity_(The_Matrix)#/media/File:MatrixTrinity.jpg     | 1          |
++----+------------+---------------------------+--------------------------------------------------------------------------------------+------------+
+4 rows in set
+irb(main):007:0> 
